@@ -1,2 +1,2 @@
 # ReFRC
-Reverse Engineering various FRC thing
+Reverse Engineering various FRC things
