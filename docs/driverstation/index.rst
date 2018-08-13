@@ -9,6 +9,7 @@ The Driver Station communicates with both the RoboRIO and Field Management Syste
    ds_to_fms.rst
    fms_to_ds.rst
    dashboard.rst
+   logging.rst
    usage_reporting.rst
 
 
