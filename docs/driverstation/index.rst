@@ -6,6 +6,7 @@ The Driver Station communicates with both the RoboRIO and Field Management Syste
 .. toctree::
    ds_to_rio.rst
    rio_to_ds.rst
+   ds_to_fms.rst
    dashboard.rst
    usage_reporting.rst
 

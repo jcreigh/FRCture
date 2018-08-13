@@ -1,3 +1,5 @@
+.. _`usage reporting`:
+
 Usage Reporting
 =================================
 

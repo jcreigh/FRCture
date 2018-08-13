@@ -80,7 +80,7 @@ Battery
 
 Received as a uint16, ``XXYY``. Voltage is calculated by:
 
-`XX + YY/256`
+``XX + YY/256``
 
 
 .. _Tags:
