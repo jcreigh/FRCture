@@ -1,0 +1,9 @@
+.wy-menu-vertical li.toctree-l4.current>a{background:#bdbdbd;padding:.4045em 5.663em}
+.wy-menu-vertical li.toctree-l4.current li.toctree-l5>a{display:block;background:#bdbdbd;padding:.4045em 6.663em}
+.wy-menu-vertical li.toctree-l4 a:hover span.toctree-expand{color:gray}
+.wy-menu-vertical li.toctree-l4 span.toctree-expand{color:#969696}
+.wy-menu-vertical li.toctree-l5{font-size:.9em}
+
+.wy-menu-vertical li.toctree-l3 li.toctree-l4>ul{display:none}
+.wy-menu-vertical li.toctree-l3.current li.toctree-l4.current>ul{display:block}
+

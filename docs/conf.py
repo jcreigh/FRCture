@@ -100,10 +100,20 @@ html_static_path = ['_static']
 #
 # html_sidebars = {}
 
-html_context = {
-    'css_files': ['_static/custom.css'],
-    'custom_scripts': ['_static/custom.js']
-}
+import os
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+
+if on_rtd:
+   def setup(app):
+      app.add_css_file('custom.css')
+      app.add_javascript('custom.js')
+
+else:
+   html_context = {
+      'css_files': ['_static/custom.css'],
+      'custom_scripts': ['_static/custom.js']
+   }
+
 
 # -- Options for HTMLHelp output ---------------------------------------------
 
