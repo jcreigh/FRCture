@@ -374,7 +374,9 @@ Sent immediately upon TCP connection. Sending this triggers a challenge response
 Challenge Response (``0x1b``)
 """""""""""""""""""""""""""""
 
-Used to verify if the Driver Station is "official". As of 2018, trivial to figure out the correct response.
+Used to verify if the Driver Station is "official".
+Trivial to figure out the correct response from the off-season FMS, which isn't
+incredibly useful.
 
 .. table::
    :widths: auto
@@ -385,7 +387,7 @@ Used to verify if the Driver Station is "official". As of 2018, trivial to figur
    | Response | n      | string |         |
    +----------+--------+--------+---------+
 
-There's 23 possible responses.
+As of 2017, there's 23 possible responses. These change year to year.
 
 .. table::
    :widths: auto
@@ -440,7 +442,8 @@ There's 23 possible responses.
    | 22 | ASIMO          |
    +----+----------------+
 
-The correct response uses the Random Value sent by the [Challenge Question](FMS-%E2%86%92-Driver-Station#challenge-question-0x1a).
+The correct response uses the Random Value sent by the
+:ref:`Challenge Question <challenge question>`.
 
 ``id = ( (team number) * (random value) ) % 23``
 
