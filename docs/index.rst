@@ -14,6 +14,7 @@ Report any suggestions or corrections on the `issues page <https://github.com/jc
    :caption: Contents:
 
    driverstation/index.rst
+   fpga/index.rst
 
 
 
