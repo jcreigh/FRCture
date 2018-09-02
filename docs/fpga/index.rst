@@ -7,6 +7,7 @@ safety of the robot, by preventing hardware from being used when disabled.
 
 .. toctree::
    registers.rst
+   watchdog.rst
 
 
 .. Indices and tables
