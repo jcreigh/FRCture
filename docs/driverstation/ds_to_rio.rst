@@ -147,7 +147,7 @@ Button
 
 1 bit per button, so the number of bytes is ``count / 8 + ((count == 0) ? 0 : 1)``
 
-Stored `MSB 0 <https://en.wikipedia.org/wiki/Bit_numbering#MSB_0_bit_numbering>`_. All bits after the specified number of buttons are 0.
+Stored `LSB 0 <https://en.wikipedia.org/wiki/Bit_numbering#LSB_0_bit_numbering>`_. All bits after the specified number of buttons are 0.
 
 .. _date:
 
