@@ -1,5 +1,5 @@
 Driver Station
-=================================
+==============
 
 The Driver Station communicates with both the RoboRIO and Field Management System using a set of network protocols.
 

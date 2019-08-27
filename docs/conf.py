@@ -20,7 +20,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'FRCture'
-copyright = '2018, Jessica Creighton'
+copyright = '2019, Jessica Creighton'
 author = 'Jessica Creighton'
 
 # The short X.Y version

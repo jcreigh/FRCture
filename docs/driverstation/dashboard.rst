@@ -6,15 +6,21 @@ Dashboard
 The Driver Station uses a variety of ports to communicate with any Dashboard software.
 Either connects to these ports localhost or to them on the specified Remote Dashboard IP.
 
+.. _dashboard_control:
+
 Control (UDP port 1164)
 -----------------------
 
 Simply a copy of the packets sent to the RoboRIO
 
+.. _dashboard_status:
+
 Status (UDP port 1166)
 ----------------------
 
 Simply a copy of the packets sent from the RoboRIO
+
+.. _dashboard_tcp:
 
 TCP (port 1741)
 ---------------
@@ -37,23 +43,23 @@ TCP (port 1741)
 .. table::
    :widths: auto
 
-   +--------+-------------------+
-   | ID     | Tag               |
-   +========+===================+
-   | `0x00` | `Error Messages`_ |
-   +--------+-------------------+
-   | `0x04` | `Disable Counts`_ |
-   +--------+-------------------+
-   | `0x05` | `Rail Faults`_    |
-   +--------+-------------------+
-   | `0x07` | `Match Info`_     |
-   +--------+-------------------+
-   | `0x08` | `Robot IP`_       |
-   +--------+-------------------+
-   | `0x09` | `DB Mode`_        |
-   +--------+-------------------+
+   +--------+--------------------------------------------------+
+   | ID     | Tag                                              |
+   +========+==================================================+
+   | `0x00` | :ref:`Error Messages <dashboard_error_messages>` |
+   +--------+--------------------------------------------------+
+   | `0x04` | :ref:`Disable Counts <dashboard_disable_counts>` |
+   +--------+--------------------------------------------------+
+   | `0x05` | :ref:`Rail Faults <dashboard_rail_faults>`       |
+   +--------+--------------------------------------------------+
+   | `0x07` | :ref:`Match Info <dashboard_match_info>`         |
+   +--------+--------------------------------------------------+
+   | `0x08` | :ref:`Robot IP <dashboard_robot_ip>`             |
+   +--------+--------------------------------------------------+
+   | `0x09` | :ref:`DB Mode <dashboard_db_mode>`               |
+   +--------+--------------------------------------------------+
 
-.. _`error messages`:
+.. _dashboard_error_messages:
 
 Error Messages (``0x00``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -67,7 +73,7 @@ Error Messages (``0x00``)
    | Message | n      | string |         |
    +---------+--------+--------+---------+
 
-.. _`disable counts`:
+.. _dashboard_disable_counts:
 
 Disable Counts (``0x04``)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -83,7 +89,7 @@ Disable Counts (``0x04``)
    | 12V   | 2      | uint16 |         |
    +-------+--------+--------+---------+
 
-.. _`rail faults`:
+.. _dashboard_rail_faults:
 
 Rail Faults (``0x05``)
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -101,7 +107,7 @@ Rail Faults (``0x05``)
    | 3.3V  | 2      | uint16 |         |
    +-------+--------+--------+---------+
 
-.. _`match info`:
+.. _dashboard_match_info:
 
 Match Info (``0x07``)
 ^^^^^^^^^^^^^^^^^^^^^
@@ -121,7 +127,7 @@ Match Info (``0x07``)
    | Replay Number | 1      | uint8  |                                                            |
    +---------------+--------+--------+------------------------------------------------------------+
 
-.. _`robot ip`:
+.. _dashboard_robot_ip:
 
 Robot IP (``0x08``)
 ^^^^^^^^^^^^^^^^^^^
@@ -135,7 +141,7 @@ Robot IP (``0x08``)
    | IP    | 4      | IPv4 Address |         |
    +-------+--------+--------------+---------+
 
-.. _`db mode`:
+.. _dashboard_db_mode:
 
 DB Mode (``0x09``)
 ^^^^^^^^^^^^^^^^^^
@@ -143,11 +149,13 @@ DB Mode (``0x09``)
 .. table::
    :widths: auto
 
-   +-------+--------+---------+---------+
-   | Field | Length | Type    | Comment |
-   +=======+========+=========+=========+
-   | Mode  | 1      | `Mode`_ |         |
-   +-------+--------+---------+---------+
+   +-------+--------+------------------------------+---------+
+   | Field | Length | Type                         | Comment |
+   +=======+========+==============================+=========+
+   | Mode  | 1      | :ref:`Mode <dashboard_mode>` |         |
+   +-------+--------+------------------------------+---------+
+
+.. _dashboard_mode:
 
 Mode
 """"
@@ -155,13 +163,15 @@ Mode
 .. table::
    :widths: auto
 
-   +-----------+------------+---------+
-   | Field     | Mask       | Comment |
-   +===========+============+=========+
-   | Docked    | `.....x..` |         |
-   +-----------+------------+---------+
-   | Simulated | `.......x` |         |
-   +-----------+------------+---------+
+   +-----------+--------------+---------+
+   | Field     | Mask         | Comment |
+   +===========+==============+=========+
+   | Docked    | ``.....x..`` |         |
+   +-----------+--------------+---------+
+   | Simulated | ``.......x`` |         |
+   +-----------+--------------+---------+
+
+.. _dashboard_tcp_listening:
 
 TCP Listening (port 1742)
 -------------------------

@@ -1,5 +1,5 @@
 FRCture -- Reverse Engineering FRC
-=================================
+==================================
 
 Documenting the results of reversing engineering various proprietary aspects of
 the `FIRST Robotics Competition <https://www.firstinspires.org/robotics/frc>`_
