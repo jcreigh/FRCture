@@ -2,7 +2,7 @@ Watchdog
 ========
 
 The FPGA has a watchdog which, when fed properly, enables all the outputs on
-the robot (e.g. CAN, PWM, Relays, etc).
+the robot (e.g. PWM, Relays, CAN (albeit, indirectly), etc).
 
 .. DANGER::
    Manually feeding the watchdog bypasses all the built in safeties preventing
@@ -13,38 +13,74 @@ the robot (e.g. CAN, PWM, Relays, etc).
 Feeding
 -------
 
-1. Send ``b007`` to ``SysWatchdog.Command``
-2. Read from ``SysWatchdog.Challenge``
-3. Bitwise OR the proper response with ``a300`` and write it to 
-   ``SysWatchdog.Command``
-4. Write ``feed`` to ``SysWatchdog.Command`` and go to step 2
+The 2019 FPGA watchdog was updated to be slightly obfuscated, but is still based
+on a single byte challenge-response, so still has the same problem.
 
-To stop feeding, one should write ``dead`` to ``SysWatchdog.Command``
+1. Write ``0xb007`` to ``SysWatchdog.Command``
+2. Read from ``SysWatchdog.Challenge`` (4 bytes as of 2019)
+3. Apply the following deobfuscation to the challenge:
+
+.. code-block:: c
+
+   uint32_t swapped = obfuscated;
+
+   swapped = ((swapped >> 1) & (0x55555555)) | ((swapped & (0x55555555)) << 1);
+   // Swap consecutive pairs
+   swapped = ((swapped >> 2) & (0x33333333)) | ((swapped & (0x33333333)) << 2);
+   // Swap nibbles
+   swapped = ((swapped >> 4) & (0x0f0f0f0f)) | ((swapped & (0x0f0f0f0f)) << 4);
+
+   // XOR outer bytes of swapped with inner bytes of original obfuscated challenge
+   challenge = ( (swapped >> 24) ^ (obfuscated >> 16) ^ (obfuscated >> 8) ^ swapped ) & 0xff;
+
+4. The official code combines the response with random data to reobfuscate it.
+   The result is that the lower two bytes XORed together produce the response. 
+
+.. code-block:: c
+
+  response = 0xcc | ((0xcc ^ responses[challenge]) << 8) 
+
+.. NOTE::
+
+   This can be any byte (``0xcc`` used above) other than ``0x00``. Using ``0x00`` will
+   cause the watchdog to die when the response is ``0x00``. This is what
+   lead to FIRST to release a late build season image, since the original didn't check.
+   
+   When enabled, every 20ms there's a :math:`\frac{1}{256}` chance for the (lower byte of the)
+   random obfuscation number to be 0, and a :math:`\frac{1}{256}` chance for the response to be 0.
+   When both were 0 (on average, every 21.8 minutes), the watchdog would die.
+
+5. Write the response to ``SysWatchdog.Command``
+6. Write ``0xfeed`` to ``SysWatchdog.Command`` and go to step 2
+
+To stop feeding, one should write ``0xdead`` to ``SysWatchdog.Command``
 
 Challenge-response
 ------------------
 
-The challenge-response is a single byte as of 2018, so simply intercepting and
-recording all the proper responses is trivial. The current responses are:
+The challenge-response is a single byte in 2019, just obfuscated, so simply
+intercepting, deobfuscating, and recording all the proper responses is trivial.
+
+The current responses are:
 
 .. code-block:: c
 
    uint8_t responses[256] = {
-      215, 146, 240,  69,  60,  49, 178,  31,  50, 191, 242,  14, 110, 175,  34, 103,
-      156, 180,  94,  96, 222,   2,  57,  81, 122,  71,   3, 166,  75,  35,  19, 251,
-       58, 155, 149, 117, 184,  27, 158, 248,  51, 159,  98,  87,   4, 154,  73, 213,
-      224,  47,  61,  54, 205,   8,  10,  29, 171, 241,  40,  77,  21, 217, 247, 208,
-       70, 229,  32, 136,  72, 121, 218, 109,   1,  83, 144, 226, 127,  12, 253, 186,
-      227,  88, 129, 199, 172, 124,  20, 200, 177,  84,  13,  53, 243, 120,  17, 161,
-      115,  65, 255, 167,  15, 138,   7, 165, 249, 195,  97, 236, 219, 250, 235, 196,
-      210,   0, 231,  25, 151, 118, 201, 147, 176, 246,  56, 169,  82, 188,  42, 232,
-       28,  33,  67,  24, 148, 174,  66, 203, 193,  36, 206, 207, 157, 181, 113, 202,
-      107,  93, 220, 101, 140, 131, 160,  41,  37, 239, 102,  18,  39,  90,  62, 112,
-       26, 244,  48,  63,  76,  22, 111,  16,  91,  80, 162, 105, 152, 142, 108, 212,
-      125, 153, 163, 106, 100, 192, 204, 128, 116, 233, 179, 164,  89, 170, 228,  45,
-      238, 221, 143,  99,   9,   5,  44, 123, 234, 183, 145,  23,  46, 114, 190,  92,
-      137, 198,  55, 135,  68, 254, 252, 173,  86,  74,  64,  79, 209, 141, 130, 168,
-      230, 104, 187, 194, 182, 139, 150, 223, 134, 119, 189, 245,  85,  52,  95, 214,
-      132, 133, 216,  11,  43,  78,  30, 237, 211,  59,   6, 126,  38, 185, 225, 197
+    118, 154, 243,  85,  81,  32, 153, 216, 137, 123,  26,  45, 165,  28, 100,   2, 
+    168, 234,  61, 231, 155, 250, 248,  74,  58, 230, 246,  69,  77, 163,   7,  52, 
+    106, 239, 240,  64, 188, 147, 254,   5, 126, 138, 121, 113, 229, 179,  49, 161, 
+    109,  57,  27,  18,  86, 148, 195,  55, 222, 211, 117, 210, 104,   3, 226,  67, 
+    209, 217, 177,  12, 219, 101,  73, 145,  99, 164, 215, 214,  94,  78,  17,   0, 
+    169, 225, 245, 119,  53, 157, 224, 107, 212,  51, 218,  63,   8, 174, 252,  96, 
+    184, 223, 105,  38, 129,  82,  92, 134, 194,  80, 102,  48, 146,  36, 204, 242, 
+    238, 253, 130,  40, 152, 182,  70, 178, 247,  84, 187, 235, 208,  42, 202,  71, 
+     23,  54, 141, 175, 180,  20,  89,  29,  97, 108, 221, 156, 206, 236, 189, 143, 
+      9,  30, 125,  35,  87, 144, 159,  90, 114, 191, 139,   6, 201, 171, 228, 213, 
+     15,  65, 232,  50,  79, 150, 220, 133, 116, 181, 185,  16, 190,  91, 200,  47, 
+    197, 203,  68,  21,  43, 167, 199, 241, 142, 255, 183, 158, 122, 251,  59, 176, 
+     39,   1, 192,  83, 124,  37, 115, 132, 128,  22, 244, 249,  93,  46, 227,  11, 
+    149, 172, 196, 136, 193, 207,  76,  13, 162,  19, 170,  10,  66, 131,  44, 110, 
+     75,  31, 103,  33,  56, 198, 140, 120, 166,  72,  98,  95, 127, 112, 160,  25, 
+     34, 186, 173, 135,  88,  14,   4, 237,  62,  24, 233,  60, 111, 205, 151,  41
    };
 
