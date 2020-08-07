@@ -6,7 +6,7 @@ FMS to Driver Station
 UDP
 ---
 
-Sent to the DS on UDP port 1121 by the FMS every 500ms. (Was 1120, changed at some point?)
+Sent to the DS every 500ms on UDP port 1121 by the normal FMS, or to UDP port 1120 by the offseason FMS. Sending to 1120 causes the DS to display a prompt asking to approve FMS control, whereas sending to 1121 starts FMS control immediatley.
 
 .. table::
    :widths: auto
