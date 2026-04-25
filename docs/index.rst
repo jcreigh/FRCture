@@ -15,6 +15,7 @@ Report any suggestions or corrections on the `issues page <https://github.com/jc
 
    driverstation/index.rst
    fpga/index.rst
+   systemcore/index.rst
 
 
 
